@@ -20,10 +20,10 @@ public class GitPlugin
         [Description("Absolute path to a local Git repository")] string path)
     {
         if (!Repository.IsValid(path))
-            throw new ArgumentException("Not a valid git repo 🔥");
+            throw new ArgumentException("Not a valid git repo");
 
         _repo = new Repository(path);
-        return $"👍 Repo set to {path}";
+        return $"Repo set to {path}";
     }
 
     // ─────────────────────────────────────────────
@@ -105,11 +105,7 @@ public class GitPlugin
     // ─────────────────────────────────────────────
     // Git networking (pull / push)
     // ─────────────────────────────────────────────
-    private Credentials _creds => new UsernamePasswordCredentials
-    {
-        Username = Environment.GetEnvironmentVariable("GIT_USER") ?? "git",
-        Password = Environment.GetEnvironmentVariable("GIT_PAT") ?? ""
-    };
+    private Credentials _creds => new DefaultCredentials();
 
     [KernelFunction, Description("Pull latest changes from origin")]
     public string Pull()
@@ -145,6 +141,7 @@ public class GitPlugin
     [KernelFunction, Description("Increment patch version and return new semver")]
     public string BumpPatchVersion()
     {
+        EnsureVersionFile();
         var semver = GetCurrentVersion();
         var parts = semver.Split('.').Select(int.Parse).ToArray();
         parts[2]++;
@@ -155,7 +152,10 @@ public class GitPlugin
 
     [KernelFunction, Description("Retrieve the currently stored version")]
     public string GetCurrentVersion()
-        => File.Exists(_verFile) ? File.ReadAllText(_verFile) : "0.0.0";
+    {
+        EnsureVersionFile();
+        return File.ReadAllText(_verFile);
+    }
 
     [KernelFunction, Description("Force-set the version to MAJOR.MINOR.PATCH")]
     public string SetVersion(
@@ -172,5 +172,12 @@ public class GitPlugin
     {
         if (_repo is null)
             throw new InvalidOperationException("Repository not set – call SetRepo first.");
+    }
+
+    private static void EnsureVersionFile()
+    {
+        Directory.CreateDirectory("Data");
+        if (!File.Exists(_verFile))
+            File.WriteAllText(_verFile, "0.0.0");
     }
 }

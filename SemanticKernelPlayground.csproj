@@ -29,4 +29,14 @@
 		</Content>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Remove="DAta1\**" />
+	  <EmbeddedResource Remove="DAta1\**" />
+	  <None Remove="DAta1\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Data\" />
+	</ItemGroup>
+
 </Project>
