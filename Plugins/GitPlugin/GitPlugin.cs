@@ -1,6 +1,7 @@
 ﻿using LibGit2Sharp;
 using Microsoft.SemanticKernel;
 using System.ComponentModel;
+using LibGit2Sharp.Handlers;
 
 namespace SemanticKernelPlayground.Plugins;
 
@@ -105,7 +106,12 @@ public class GitPlugin
     // ─────────────────────────────────────────────
     // Git networking (pull / push)
     // ─────────────────────────────────────────────
-    private Credentials _creds => new DefaultCredentials();
+    private Credentials _creds =>
+        new UsernamePasswordCredentials
+        {
+            Username = Environment.GetEnvironmentVariable("GIT_USER") ?? "git",
+            Password = Environment.GetEnvironmentVariable("GIT_PAT") ?? ""
+        };
 
     [KernelFunction, Description("Pull latest changes from origin")]
     public string Pull()
