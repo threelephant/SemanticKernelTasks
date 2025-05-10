@@ -100,8 +100,8 @@ public class GitPlugin(IConfiguration cfg)
     private Credentials Creds => 
         new UsernamePasswordCredentials
         {
-            Username = cfg["Git:User"] ?? "git",
-            Password = cfg["Git:Pat"] ?? ""
+            Username = cfg["GIT_NAME"] ?? "git",
+            Password = cfg["GIT_PAT"] ?? ""
         };
 
     [KernelFunction, Description("Pull latest changes from origin")]
