@@ -124,7 +124,7 @@ public class GitPlugin(IConfiguration cfg)
         var opts = new PushOptions { CredentialsProvider = (_, _, _) => Creds };
         _repo?.Network.Push(_repo.Branches[b], opts);
 
-        return $"Pushed {b} to origin"; 
+        return $"Pushed {b} to origin";
     }
 
     [KernelFunction, Description("Increment patch version and return new semver")]
