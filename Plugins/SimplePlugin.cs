@@ -9,7 +9,6 @@ public sealed class SimplePlugin
     public string Echo(
         [Description("Text to echo")] string text)
     {
-        // you could jazz it up however you like
         return $"🔁 You said: {text}";
     }
 }

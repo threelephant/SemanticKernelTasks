@@ -36,14 +36,13 @@ public class GitPlugin
         return System.Text.Json.JsonSerializer.Serialize(commits);
     }
 
-    // OPTIONAL ➜ simple patch‑bump stored in /Data/version.json
     [KernelFunction, Description("Increment patch version and return new semver")]
     public string BumpPatchVersion()
     {
         const string path = "Data/version.json";
         var semver = File.Exists(path) ? File.ReadAllText(path) : "0.0.0";
         var parts = semver.Split('.').Select(int.Parse).ToArray();
-        parts[2]++;                           // bump patch
+        parts[2]++;
         var newVer = $"{parts[0]}.{parts[1]}.{parts[2]}";
         File.WriteAllText(path, newVer);
         return newVer;
