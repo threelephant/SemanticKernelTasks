@@ -1,4 +1,5 @@
 ﻿using LibGit2Sharp;
+using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using System.ComponentModel;
 
@@ -7,8 +8,9 @@ namespace SemanticKernelPlayground.Plugins;
 /// <summary>
 /// A single SK plugin that exposes Git + semver helpers to the LLM.
 /// </summary>
-public class GitPlugin
+public class GitPlugin(IConfiguration cfg)
 {
+    private readonly IConfiguration _cfg = cfg;
     private Repository? _repo;
     private const string VerFile = "Data/version.json";
 
@@ -96,11 +98,11 @@ public class GitPlugin
         return $"✅ Created commit {commit.Sha[..7]}";
     }
 
-    private static Credentials Creds => 
+    private Credentials Creds => 
         new UsernamePasswordCredentials
         {
-            Username = Environment.GetEnvironmentVariable("GIT_USER") ?? "git",
-            Password = Environment.GetEnvironmentVariable("GIT_PAT") ?? ""
+            Username = _cfg["Git:User"] ?? "git",
+            Password = _cfg["Git:Pat"] ?? ""
         };
 
     [KernelFunction, Description("Pull latest changes from origin")]

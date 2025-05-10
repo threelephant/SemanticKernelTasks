@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
 using Microsoft.SemanticKernel.Connectors.AzureOpenAI;
@@ -16,6 +17,7 @@ var apiKey = configuration["ApiKey"] ?? throw new ApplicationException("ApiKey n
 var builder = Kernel.CreateBuilder()
     .AddAzureOpenAIChatCompletion(modelName, endpoint, apiKey);
 
+builder.Services.AddSingleton<IConfiguration>(configuration);
 builder.Plugins.AddFromType<SimplePlugin>();
 builder.Plugins.AddFromType<GitPlugin>();
 builder.Plugins.AddFromPromptDirectory("Plugins/PromptPlugin");
