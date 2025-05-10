@@ -106,7 +106,7 @@ public class GitPlugin
     // ─────────────────────────────────────────────
     // Git networking (pull / push)
     // ─────────────────────────────────────────────
-    private static Credentials Creds =>
+    private static Credentials Creds => 
         new UsernamePasswordCredentials
         {
             Username = Environment.GetEnvironmentVariable("GIT_USER") ?? "git",
