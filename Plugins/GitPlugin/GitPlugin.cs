@@ -151,6 +151,7 @@ public class GitPlugin(IConfiguration cfg)
     public string SetVersion(
         [Description("Version in semantic-version format")] string semver)
     {
+        EnsureVersionFile();
         File.WriteAllText(VerFile, semver);
         return $"Version set to {semver}";
     }
@@ -161,10 +162,20 @@ public class GitPlugin(IConfiguration cfg)
             throw new InvalidOperationException("Repository not set – call SetRepo first.");
     }
 
-    private static void EnsureVersionFile()
+    private string VersionFilePath
     {
-        Directory.CreateDirectory("Data");
-        if (!File.Exists(VerFile))
-            File.WriteAllText(VerFile, "0.0.0");
+        get
+        {
+            EnsureRepo();
+            var repoRoot = _repo!.Info.WorkingDirectory;
+            return Path.Combine(repoRoot, "version.json");
+        }
+    }
+
+    private void EnsureVersionFile()
+    {
+        var file = VersionFilePath;
+        Directory.CreateDirectory(Path.GetDirectoryName(file)!);
+        if (!File.Exists(file)) File.WriteAllText(file, "0.0.0");
     }
 }
