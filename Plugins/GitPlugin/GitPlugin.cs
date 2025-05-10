@@ -122,7 +122,7 @@ public class GitPlugin
             _repo!, sig,
             new PullOptions
             {
-                FetchOptions = new() { CredentialsProvider = (_, _, _) => Creds }
+                FetchOptions = new FetchOptions { CredentialsProvider = (_url, _user, _types) => Creds }
             });
 
         return $"⬇️  Pull result: {result.Status}";
@@ -134,9 +134,8 @@ public class GitPlugin
     {
         EnsureRepo();
         var b = branch ?? _repo!.Head.FriendlyName;
-        _repo!.Network.Push(
-            _repo.Branches[b],
-            new PushOptions { CredentialsProvider = (_, _, _) => Creds });
+        var opts = new PushOptions { CredentialsProvider = (_url, _user, _types) => Creds };
+        _repo?.Network.Push(_repo.Branches[b], opts);
 
         return $"⬆️  Pushed {b} to origin";
     }
