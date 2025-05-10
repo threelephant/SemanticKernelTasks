@@ -12,9 +12,6 @@ public class GitPlugin
     private Repository? _repo;
     private const string VerFile = "Data/version.json";
 
-    // ─────────────────────────────────────────────
-    // Repo bootstrap
-    // ─────────────────────────────────────────────
     [KernelFunction, Description("Set the working repository path")]
     public string SetRepo(
         [Description("Absolute path to a local Git repository")] string path)
@@ -26,9 +23,6 @@ public class GitPlugin
         return $"Repo set to {path}";
     }
 
-    // ─────────────────────────────────────────────
-    // Commit helpers
-    // ─────────────────────────────────────────────
     [KernelFunction, Description("Get latest commits as JSON")]
     public string GetCommits(
         [Description("How many commits to retrieve")] int count = 10)
@@ -102,9 +96,6 @@ public class GitPlugin
         return $"✅ Created commit {commit.Sha[..7]}";
     }
 
-    // ─────────────────────────────────────────────
-    // Git networking (pull / push)
-    // ─────────────────────────────────────────────
     private static Credentials Creds => 
         new UsernamePasswordCredentials
         {
@@ -139,9 +130,6 @@ public class GitPlugin
         return $"⬆️  Pushed {b} to origin";
     }
 
-    // ─────────────────────────────────────────────
-    // SemVer utilities
-    // ─────────────────────────────────────────────
     [KernelFunction, Description("Increment patch version and return new semver")]
     public string BumpPatchVersion()
     {
@@ -169,9 +157,6 @@ public class GitPlugin
         return $"📌 Version set to {semver}";
     }
 
-    // ─────────────────────────────────────────────
-    // Helpers
-    // ─────────────────────────────────────────────
     private void EnsureRepo()
     {
         if (_repo is null)
