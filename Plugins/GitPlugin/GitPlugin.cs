@@ -8,7 +8,6 @@ namespace SemanticKernelPlayground.Plugins;
 public class GitPlugin(IConfiguration cfg)
 {
     private Repository? _repo;
-    private const string VerFile = "Data/version.json";
 
     [KernelFunction, Description("Set the working repository path")]
     public string SetRepo(
@@ -136,7 +135,7 @@ public class GitPlugin(IConfiguration cfg)
         var parts = semver.Split('.').Select(int.Parse).ToArray();
         parts[2]++;
         var newVer = $"{parts[0]}.{parts[1]}.{parts[2]}";
-        File.WriteAllText(VerFile, newVer);
+        File.WriteAllText(VersionFilePath, newVer);
         return newVer;
     }
 
@@ -144,7 +143,7 @@ public class GitPlugin(IConfiguration cfg)
     public string GetCurrentVersion()
     {
         EnsureVersionFile();
-        return File.ReadAllText(VerFile);
+        return File.ReadAllText(VersionFilePath);
     }
 
     [KernelFunction, Description("Force-set the version to MAJOR.MINOR.PATCH")]
@@ -152,7 +151,7 @@ public class GitPlugin(IConfiguration cfg)
         [Description("Version in semantic-version format")] string semver)
     {
         EnsureVersionFile();
-        File.WriteAllText(VerFile, semver);
+        File.WriteAllText(VersionFilePath, semver);
         return $"Version set to {semver}";
     }
 
