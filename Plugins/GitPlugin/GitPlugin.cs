@@ -5,9 +5,6 @@ using System.ComponentModel;
 
 namespace SemanticKernelPlayground.Plugins;
 
-/// <summary>
-/// A single SK plugin that exposes Git + semver helpers to the LLM.
-/// </summary>
 public class GitPlugin(IConfiguration cfg)
 {
     private Repository? _repo;
@@ -94,7 +91,7 @@ public class GitPlugin(IConfiguration cfg)
         var sig = new Signature(author, email, DateTimeOffset.Now);
         var commit = _repo!.Commit(message, sig, sig);
 
-        return $"✅ Created commit {commit.Sha[..7]}";
+        return $"Created commit {commit.Sha[..7]}";
     }
 
     private Credentials Creds => 
