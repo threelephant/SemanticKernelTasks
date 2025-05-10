@@ -168,7 +168,7 @@ public class GitPlugin(IConfiguration cfg)
         {
             EnsureRepo();
             var repoRoot = _repo!.Info.WorkingDirectory;
-            return Path.Combine(repoRoot, "Data\\version.json");
+            return Path.Combine(repoRoot, "Data", "version.json");
         }
     }
 
