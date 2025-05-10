@@ -18,3 +18,11 @@ A .NET 9 console application that implements a chat interface using Microsoft's 
   "GIT_NAME": ""
 }
 ```
+## Prompts
+
+```
+SetRepo("...")
+```
+```
+Create release notes from the last 10 commits, bump patch, commit the updated version.json and push to origin.
+```
