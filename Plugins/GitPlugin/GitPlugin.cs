@@ -1,7 +1,6 @@
 ﻿using LibGit2Sharp;
 using Microsoft.SemanticKernel;
 using System.ComponentModel;
-using LibGit2Sharp.Handlers;
 
 namespace SemanticKernelPlayground.Plugins;
 
@@ -11,7 +10,7 @@ namespace SemanticKernelPlayground.Plugins;
 public class GitPlugin
 {
     private Repository? _repo;
-    private const string _verFile = "Data/version.json";
+    private const string VerFile = "Data/version.json";
 
     // ─────────────────────────────────────────────
     // Repo bootstrap
@@ -78,11 +77,11 @@ public class GitPlugin
         var headCommit = _repo!.Lookup<Commit>(head)
             ?? throw new ArgumentException("Head commit not found");
 
-        var patch = _repo.Diff.Compare<Patch>(baseCommit.Tree, headCommit.Tree);
+        var patch = _repo?.Diff.Compare<Patch>(baseCommit.Tree, headCommit.Tree);
         var summary = new
         {
-            files = patch.Count(),
-            added = patch.LinesAdded,
+            files = patch!.Count(),
+            added = patch!.LinesAdded,
             deleted = patch.LinesDeleted
         };
         return System.Text.Json.JsonSerializer.Serialize(summary);
@@ -122,7 +121,7 @@ public class GitPlugin
             _repo!, sig,
             new PullOptions
             {
-                FetchOptions = new FetchOptions { CredentialsProvider = (_url, _user, _types) => Creds }
+                FetchOptions = new FetchOptions { CredentialsProvider = (_, _, _) => Creds }
             });
 
         return $"⬇️  Pull result: {result.Status}";
@@ -134,7 +133,7 @@ public class GitPlugin
     {
         EnsureRepo();
         var b = branch ?? _repo!.Head.FriendlyName;
-        var opts = new PushOptions { CredentialsProvider = (_url, _user, _types) => Creds };
+        var opts = new PushOptions { CredentialsProvider = (_, _, _) => Creds };
         _repo?.Network.Push(_repo.Branches[b], opts);
 
         return $"⬆️  Pushed {b} to origin";
@@ -151,7 +150,7 @@ public class GitPlugin
         var parts = semver.Split('.').Select(int.Parse).ToArray();
         parts[2]++;
         var newVer = $"{parts[0]}.{parts[1]}.{parts[2]}";
-        File.WriteAllText(_verFile, newVer);
+        File.WriteAllText(VerFile, newVer);
         return newVer;
     }
 
@@ -159,14 +158,14 @@ public class GitPlugin
     public string GetCurrentVersion()
     {
         EnsureVersionFile();
-        return File.ReadAllText(_verFile);
+        return File.ReadAllText(VerFile);
     }
 
     [KernelFunction, Description("Force-set the version to MAJOR.MINOR.PATCH")]
     public string SetVersion(
         [Description("Version in semantic-version format")] string semver)
     {
-        File.WriteAllText(_verFile, semver);
+        File.WriteAllText(VerFile, semver);
         return $"📌 Version set to {semver}";
     }
 
@@ -182,7 +181,7 @@ public class GitPlugin
     private static void EnsureVersionFile()
     {
         Directory.CreateDirectory("Data");
-        if (!File.Exists(_verFile))
-            File.WriteAllText(_verFile, "0.0.0");
+        if (!File.Exists(VerFile))
+            File.WriteAllText(VerFile, "0.0.0");
     }
 }
