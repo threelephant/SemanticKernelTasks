@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.SemanticKernel;
 using System.ComponentModel;
+using System.Text.Json;
 
 namespace SemanticKernelPlayground.Plugins;
 
@@ -33,7 +34,7 @@ public class GitPlugin(IConfiguration cfg)
             dateUtc = c.Author.When.UtcDateTime
         });
 
-        return System.Text.Json.JsonSerializer.Serialize(commits);
+        return JsonSerializer.Serialize(commits);
     }
 
     [KernelFunction, Description("Find commits whose message contains a keyword")]
@@ -54,7 +55,7 @@ public class GitPlugin(IConfiguration cfg)
                 dateUtc = c.Author.When.UtcDateTime
             });
 
-        return System.Text.Json.JsonSerializer.Serialize(found);
+        return JsonSerializer.Serialize(found);
     }
 
     [KernelFunction, Description("Show diff-stats between two commits")]
@@ -75,7 +76,7 @@ public class GitPlugin(IConfiguration cfg)
             added = patch!.LinesAdded,
             deleted = patch.LinesDeleted
         };
-        return System.Text.Json.JsonSerializer.Serialize(summary);
+        return JsonSerializer.Serialize(summary);
     }
 
     [KernelFunction, Description("Stage *all* changes and create a commit")]
