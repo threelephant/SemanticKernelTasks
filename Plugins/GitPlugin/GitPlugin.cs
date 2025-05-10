@@ -10,7 +10,6 @@ namespace SemanticKernelPlayground.Plugins;
 /// </summary>
 public class GitPlugin(IConfiguration cfg)
 {
-    private readonly IConfiguration _cfg = cfg;
     private Repository? _repo;
     private const string VerFile = "Data/version.json";
 
@@ -101,8 +100,8 @@ public class GitPlugin(IConfiguration cfg)
     private Credentials Creds => 
         new UsernamePasswordCredentials
         {
-            Username = _cfg["Git:User"] ?? "git",
-            Password = _cfg["Git:Pat"] ?? ""
+            Username = cfg["Git:User"] ?? "git",
+            Password = cfg["Git:Pat"] ?? ""
         };
 
     [KernelFunction, Description("Pull latest changes from origin")]
@@ -129,7 +128,7 @@ public class GitPlugin(IConfiguration cfg)
         var opts = new PushOptions { CredentialsProvider = (_, _, _) => Creds };
         _repo?.Network.Push(_repo.Branches[b], opts);
 
-        return $"⬆️  Pushed {b} to origin";
+        return $"Pushed {b} to origin";
     }
 
     [KernelFunction, Description("Increment patch version and return new semver")]
@@ -156,7 +155,7 @@ public class GitPlugin(IConfiguration cfg)
         [Description("Version in semantic-version format")] string semver)
     {
         File.WriteAllText(VerFile, semver);
-        return $"📌 Version set to {semver}";
+        return $"Version set to {semver}";
     }
 
     private void EnsureRepo()
