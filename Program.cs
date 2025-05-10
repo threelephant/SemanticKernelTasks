@@ -17,6 +17,8 @@ var builder = Kernel.CreateBuilder()
     .AddAzureOpenAIChatCompletion(modelName, endpoint, apiKey);
 
 builder.Plugins.AddFromType<SimplePlugin>();
+builder.Plugins.AddFromType<GitPlugin>();
+builder.Plugins.AddFromPromptDirectory("Plugins/PromptPlugin");
 
 var kernel = builder.Build();
 
