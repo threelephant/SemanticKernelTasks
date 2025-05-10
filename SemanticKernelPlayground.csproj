@@ -30,13 +30,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Data\" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Content Include="Data\**\*">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
+	  <Content Include="version.json" />
 	</ItemGroup>
 
 </Project>
