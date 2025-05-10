@@ -106,7 +106,7 @@ public class GitPlugin
     // ─────────────────────────────────────────────
     // Git networking (pull / push)
     // ─────────────────────────────────────────────
-    private Credentials _creds =>
+    private static Credentials Creds =>
         new UsernamePasswordCredentials
         {
             Username = Environment.GetEnvironmentVariable("GIT_USER") ?? "git",
@@ -122,7 +122,7 @@ public class GitPlugin
             _repo!, sig,
             new PullOptions
             {
-                FetchOptions = new() { CredentialsProvider = (_, _, _) => _creds }
+                FetchOptions = new() { CredentialsProvider = (_, _, _) => Creds }
             });
 
         return $"⬇️  Pull result: {result.Status}";
@@ -136,7 +136,7 @@ public class GitPlugin
         var b = branch ?? _repo!.Head.FriendlyName;
         _repo!.Network.Push(
             _repo.Branches[b],
-            new PushOptions { CredentialsProvider = (_, _, _) => _creds });
+            new PushOptions { CredentialsProvider = (_, _, _) => Creds });
 
         return $"⬆️  Pushed {b} to origin";
     }
