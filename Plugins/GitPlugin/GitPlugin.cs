@@ -113,7 +113,7 @@ public class GitPlugin(IConfiguration cfg)
                 FetchOptions = new FetchOptions { CredentialsProvider = (_, _, _) => Creds }
             });
 
-        return $"⬇️  Pull result: {result.Status}";
+        return $"Pull result: {result.Status}";
     }
 
     [KernelFunction, Description("Push current branch to origin")]
